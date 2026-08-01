@@ -93,7 +93,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: scheme.primaryContainer.withValues(alpha: 0.4),
+              color: scheme.primaryContainer.withOpacity(0.4),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
