@@ -25,7 +25,15 @@ class DramaCard extends StatelessWidget {
                   color: scheme.primaryContainer,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(Icons.movie_outlined, color: scheme.onPrimaryContainer),
+                clipBehavior: Clip.antiAlias,
+                child: drama.posterUrl.isEmpty
+                    ? Icon(Icons.movie_outlined, color: scheme.onPrimaryContainer)
+                    : Image.network(
+                        drama.posterUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) =>
+                            Icon(Icons.movie_outlined, color: scheme.onPrimaryContainer),
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
