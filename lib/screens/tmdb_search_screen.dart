@@ -5,7 +5,8 @@ import '../data/ai_service.dart';
 import 'detail_screen.dart';
 
 class TmdbSearchScreen extends StatefulWidget {
-  const TmdbSearchScreen({super.key});
+  final String? initialQuery;
+  const TmdbSearchScreen({super.key, this.initialQuery});
 
   @override
   State<TmdbSearchScreen> createState() => _TmdbSearchScreenState();
@@ -16,6 +17,15 @@ class _TmdbSearchScreenState extends State<TmdbSearchScreen> {
   List<TmdbSearchResult> _results = [];
   bool _loading = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
+      _controller.text = widget.initialQuery!;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _search());
+    }
+  }
 
   Future<void> _search() async {
     final query = _controller.text.trim();
