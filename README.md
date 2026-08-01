@@ -19,8 +19,15 @@ tersimpan lokal di HP kamu sendiri.
 - Halaman detail drama (sinopsis bahasa Indonesia, cast, info tayang)
 - UI minimalis ala Metrolist (Material 3), dengan logo HanVerse
   (motif taegeuk + aksen play) sebagai app icon
-- Data drama masih mock (`lib/data/mock_dramas.dart`) — untuk pemakaian
-  pribadi kamu bisa edit file ini langsung dan tambah drama sendiri
+- **Tambah dari TMDB**: cari drakor lewat database TMDB (gratis) dan
+  impor langsung ke katalog — poster, sinopsis, cast, genre, jadwal
+  tayang otomatis terisi. Kalau TMDB belum punya sinopsis bahasa
+  Indonesia, otomatis diterjemahkan pakai AI (Gemini) saat diimpor —
+  gak ada lagi teks bahasa Inggris mentah. Tombol "+" ada di Home dan
+  Discover. Butuh API key TMDB (gratis, bikin di themoviedb.org ->
+  Settings -> API), diisi di Pengaturan
+- Data drama: gabungan dari data contoh bawaan (`mock_dramas.dart`)
+  + drama yang kamu impor dari TMDB, semua tersimpan lokal di HP
 
 ## Cara pakai (development lokal)
 1. Install Flutter SDK: https://docs.flutter.dev/get-started/install
