@@ -43,6 +43,18 @@ class TmdbService {
     await prefs.setString(_apiKeyPref, key);
   }
 
+  /// Cek API key TMDB beneran valid lewat endpoint autentikasi ringan.
+  static Future<bool> validateKey(String apiKey) async {
+    try {
+      final uri = Uri.parse('$_base/authentication')
+          .replace(queryParameters: {'api_key': apiKey});
+      final res = await http.get(uri);
+      return res.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Cari drama Korea berdasarkan judul. Search TMDB tidak bisa difilter
   /// negara langsung, jadi kita filter hasilnya di sisi app (origin_country
   /// mengandung 'KR').
