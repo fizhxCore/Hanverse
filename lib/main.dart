@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'screens/discover_screen.dart';
 import 'screens/list_screen.dart';
 import 'screens/profile_screen.dart';
+import 'splash_screen.dart';
 
 void main() {
   runApp(const HanVerseApp());
@@ -19,7 +20,7 @@ class HanVerseApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      home: const RootShell(),
+      home: const SplashScreen(),
     );
   }
 }
