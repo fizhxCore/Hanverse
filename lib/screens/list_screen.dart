@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/mock_dramas.dart';
+import '../data/catalog_store.dart';
 import '../data/local_store.dart';
 import '../models/drama.dart';
 import '../widgets/drama_card.dart';
@@ -14,6 +14,7 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   Map<String, UserListEntry> _entries = {};
+  List<Drama> _katalog = [];
   bool _loading = true;
 
   @override
@@ -23,15 +24,17 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   Future<void> _load() async {
-    final all = await LocalStore.loadAll();
+    final entries = await LocalStore.loadAll();
+    final katalog = await CatalogStore.loadAll();
     if (mounted) setState(() {
-      _entries = all;
+      _entries = entries;
+      _katalog = katalog;
       _loading = false;
     });
   }
 
   List<Drama> _dramasWith(WatchStatus status) {
-    return mockDramas.where((d) => _entries[d.id]?.status == status).toList();
+    return _katalog.where((d) => _entries[d.id]?.status == status).toList();
   }
 
   @override
