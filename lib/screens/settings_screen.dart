@@ -12,8 +12,8 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _aiController = TextEditingController();
   final _tmdbController = TextEditingController();
-  bool _savedAi = false;
-  bool _savedTmdb = false;
+  bool _aiChecking = false;
+  bool _tmdbChecking = false;
 
   @override
   void initState() {
@@ -30,14 +30,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  void _showSnack(String message, {bool success = true}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(success ? Icons.check_circle : Icons.error_outline,
+                color: Colors.white, size: 18),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        backgroundColor: success ? null : Theme.of(context).colorScheme.error,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
   Future<void> _saveAi() async {
-    await AiService.setApiKey(_aiController.text.trim());
-    setState(() => _savedAi = true);
+    final key = _aiController.text.trim();
+    if (key.isEmpty) return;
+    setState(() => _aiChecking = true);
+
+    final valid = await AiService.validateKey(key);
+
+    if (!mounted) return;
+    setState(() => _aiChecking = false);
+
+    if (valid) {
+      await AiService.setApiKey(key);
+      _showSnack('API key AI tervalidasi & tersimpan');
+    } else {
+      _showSnack('API key AI tidak valid, cek lagi ya', success: false);
+    }
   }
 
   Future<void> _saveTmdb() async {
-    await TmdbService.setApiKey(_tmdbController.text.trim());
-    setState(() => _savedTmdb = true);
+    final key = _tmdbController.text.trim();
+    if (key.isEmpty) return;
+    setState(() => _tmdbChecking = true);
+
+    final valid = await TmdbService.validateKey(key);
+
+    if (!mounted) return;
+    setState(() => _tmdbChecking = false);
+
+    if (valid) {
+      await TmdbService.setApiKey(key);
+      _showSnack('API key TMDB tervalidasi & tersimpan');
+    } else {
+      _showSnack('API key TMDB tidak valid, cek lagi ya', success: false);
+    }
   }
 
   @override
@@ -62,14 +107,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
               labelText: 'Gemini API Key',
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            onChanged: (_) => setState(() => _savedAi = false),
           ),
           const SizedBox(height: 8),
-          FilledButton(onPressed: _saveAi, child: const Text('Simpan')),
-          if (_savedAi) ...[
-            const SizedBox(height: 6),
-            const Text('Tersimpan.', style: TextStyle(color: Colors.green)),
-          ],
+          FilledButton(
+            onPressed: _aiChecking ? null : _saveAi,
+            child: _aiChecking
+                ? const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 16, height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      ),
+                      SizedBox(width: 10),
+                      Text('Memvalidasi...'),
+                    ],
+                  )
+                : const Text('Simpan'),
+          ),
 
           const SizedBox(height: 32),
           const Divider(),
@@ -91,14 +146,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
               labelText: 'TMDB API Key',
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            onChanged: (_) => setState(() => _savedTmdb = false),
           ),
           const SizedBox(height: 8),
-          FilledButton(onPressed: _saveTmdb, child: const Text('Simpan')),
-          if (_savedTmdb) ...[
-            const SizedBox(height: 6),
-            const Text('Tersimpan.', style: TextStyle(color: Colors.green)),
-          ],
+          FilledButton(
+            onPressed: _tmdbChecking ? null : _saveTmdb,
+            child: _tmdbChecking
+                ? const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 16, height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      ),
+                      SizedBox(width: 10),
+                      Text('Memvalidasi...'),
+                    ],
+                  )
+                : const Text('Simpan'),
+          ),
         ],
       ),
     );
