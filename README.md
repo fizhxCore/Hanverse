@@ -6,27 +6,26 @@ Database & tracker drakor dengan rekomendasi personal — versi lebih bagus dari
 Aplikasi ini sengaja dibuat tanpa backend/server/akun — semua data
 tersimpan lokal di HP kamu sendiri.
 
-- List drama (Nonton/Selesai/Rencana/Drop) — status & rating tersimpan
-  lokal di HP (shared_preferences), langsung dari halaman Detail
-- Search dasar (judul & genre)
-- **Tanya AI**: minta rekomendasi drama dari katalog, atau tanya info
-  terkini (drama baru tayang, coming soon, cast) — AI bisa Google
-  Search otomatis kalau butuh info terbaru yang belum ada di katalog
-  lokal. Butuh API key Google Gemini milikmu sendiri (ada tier gratis,
-  bikin di aistudio.google.com/apikey), diisi di Pengaturan AI
-  (Profil -> Pengaturan AI). Key disimpan lokal di HP, dipanggil
-  langsung ke Google saat kamu minta rekomendasi
-- Halaman detail drama (sinopsis bahasa Indonesia, cast, info tayang)
-- UI minimalis ala Metrolist (Material 3), dengan logo HanVerse
-  (motif taegeuk + aksen play) sebagai app icon
+- **Home ala Netflix**: hero banner, baris "Trending" (dicari AI lewat
+  Google Search, tap buat impor dari TMDB), lalu baris horizontal
+  Coming Soon / Sedang Tayang / Tamat
+- List drama (Rencana/Nonton/Selesai/Drop) dengan **rating bintang**,
+  **progress episode** (slider + stepper), dan **catatan pribadi** —
+  mirip MyDramaList, tersimpan lokal di HP
+- **Ngobrol sama AI**: halaman chat penuh (bukan cuma satu kali
+  tanya), inget konteks percakapan, bisa Google Search buat info
+  terkini
 - **Tambah dari TMDB**: cari drakor lewat database TMDB (gratis) dan
   impor langsung ke katalog — poster, sinopsis, cast, genre, jadwal
   tayang otomatis terisi. Kalau TMDB belum punya sinopsis bahasa
-  Indonesia, otomatis diterjemahkan pakai AI (Gemini) saat diimpor —
-  gak ada lagi teks bahasa Inggris mentah. Tombol "+" ada di Home dan
-  Discover. Butuh API key TMDB (gratis, bikin di themoviedb.org ->
-  Settings -> API), diisi di Pengaturan
+  Indonesia, otomatis diterjemahkan pakai AI (Gemini) saat diimpor
+- Search dasar (judul & genre) di tab Discover
+- UI minimalis ala Metrolist (Material 3), dengan logo HanVerse
+  (motif taegeuk + aksen play) sebagai app icon
 - Data drama: gabungan dari data contoh bawaan (`mock_dramas.dart`)
+- Splash screen dengan animasi logo saat app dibuka
+- API key (AI & TMDB) divalidasi beneran ke server saat disimpan,
+  bukan cuma disimpan mentah — ketauan dari awal kalau salah ketik
   + drama yang kamu impor dari TMDB, semua tersimpan lokal di HP
 
 ## Cara pakai (development lokal)
