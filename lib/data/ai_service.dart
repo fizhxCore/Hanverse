@@ -86,4 +86,53 @@ class AiService {
         .join('\n');
     return text.trim().isEmpty ? 'AI tidak memberi jawaban.' : text.trim();
   }
+
+  static Future<String> translateToIndonesian({
+    required String apiKey,
+    required String englishText,
+  }) async {
+    final response = await http.post(
+      Uri.parse(
+        'https://generativelanguage.googleapis.com/v1beta/models/$_model:generateContent',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: jsonEncode({
+        'systemInstruction': {
+          'parts': [
+            {
+              'text':
+                  'Terjemahkan teks berikut ke bahasa Indonesia yang natural, '
+                  'tanpa tambahan komentar apa pun, hanya hasil terjemahannya saja.',
+            },
+          ],
+        },
+        'contents': [
+          {
+            'role': 'user',
+            'parts': [
+              {'text': englishText},
+            ],
+          },
+        ],
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Gagal menerjemahkan (${response.statusCode}): ${response.body}');
+    }
+
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    final candidates = data['candidates'] as List<dynamic>?;
+    if (candidates == null || candidates.isEmpty) return englishText;
+
+    final parts = (candidates.first['content']?['parts'] as List<dynamic>?) ?? [];
+    final text = parts
+        .where((p) => p['text'] != null)
+        .map((p) => p['text'] as String)
+        .join('\n');
+    return text.trim().isEmpty ? englishText : text.trim();
+  }
 }
