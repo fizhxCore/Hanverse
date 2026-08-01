@@ -21,7 +21,6 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
           channel: 'stable'
 
       # Folder android/ (gradle wrapper, dll) sengaja tidak di-commit ke repo
@@ -29,7 +28,7 @@ jobs:
       # otomatis di sini setiap build, lib/ dan pubspec.yaml kita tidak
       # tersentuh karena sudah ada isinya.
       - name: Generate platform Android
-        run: flutter create --platforms=android --org com.hanverse .
+        run: flutter create --platforms=android --org com.hanverse --project-name hanverse .
 
       - name: Install dependencies
         run: flutter pub get
