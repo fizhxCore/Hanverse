@@ -48,8 +48,17 @@ class _DetailScreenState extends State<DetailScreen> {
               color: scheme.primaryContainer,
               borderRadius: BorderRadius.circular(16),
             ),
+            clipBehavior: Clip.antiAlias,
             alignment: Alignment.center,
-            child: Icon(Icons.movie_outlined, size: 48, color: scheme.onPrimaryContainer),
+            child: drama.posterUrl.isEmpty
+                ? Icon(Icons.movie_outlined, size: 48, color: scheme.onPrimaryContainer)
+                : Image.network(
+                    drama.posterUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorBuilder: (_, __, ___) => Icon(Icons.movie_outlined,
+                        size: 48, color: scheme.onPrimaryContainer),
+                  ),
           ),
           const SizedBox(height: 16),
           Wrap(
@@ -99,7 +108,10 @@ class _DetailScreenState extends State<DetailScreen> {
             const SizedBox(height: 8),
             ...drama.pemeran.map((a) => ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(backgroundColor: scheme.primaryContainer),
+                  leading: CircleAvatar(
+                    backgroundColor: scheme.primaryContainer,
+                    backgroundImage: a.fotoUrl.isEmpty ? null : NetworkImage(a.fotoUrl),
+                  ),
                   title: Text(a.nama),
                   subtitle: Text('sebagai ${a.karakter}'),
                 )),
