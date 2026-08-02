@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/drama.dart';
-import 'mock_dramas.dart';
 
-/// Katalog drama = data contoh bawaan (mockDramas) + drama yang sudah
-/// diimpor user dari TMDB. Disimpan lokal di HP, tidak ada server.
+/// Katalog drama = HANYA drama yang user tambah sendiri (lewat TMDB).
+/// Tidak ada data contoh/dummy bawaan — kalau user belum nambah apa-apa,
+/// katalognya beneran kosong. Disimpan lokal di HP, tidak ada server.
 class CatalogStore {
   static const _key = 'hanverse_custom_dramas_v1';
 
@@ -16,10 +16,7 @@ class CatalogStore {
     return list.map((e) => Drama.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  static Future<List<Drama>> loadAll() async {
-    final custom = await loadCustom();
-    return [...mockDramas, ...custom];
-  }
+  static Future<List<Drama>> loadAll() => loadCustom();
 
   static Future<void> add(Drama drama) async {
     final prefs = await SharedPreferences.getInstance();
