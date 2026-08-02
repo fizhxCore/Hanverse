@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/drama.dart';
 import '../data/local_store.dart';
+import '../data/catalog_store.dart';
 
 class DetailScreen extends StatefulWidget {
   final Drama drama;
@@ -61,6 +62,10 @@ class _DetailScreenState extends State<DetailScreen> {
   Future<void> _saveChanges() async {
     _entry.catatan = _catatanController.text;
     await LocalStore.save(_entry);
+    // Pastikan drama-nya sendiri ikut tersimpan di katalog lokal —
+    // penting buat drama yang baru dilihat lewat browsing di Home,
+    // bukan lewat alur "Tambah dari TMDB" eksplisit.
+    await CatalogStore.add(drama);
     setState(() => _dirty = false);
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
