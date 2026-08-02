@@ -6,27 +6,34 @@ Database & tracker drakor dengan rekomendasi personal — versi lebih bagus dari
 Aplikasi ini sengaja dibuat tanpa backend/server/akun — semua data
 tersimpan lokal di HP kamu sendiri.
 
-- **Home ala Netflix**: hero banner, baris "Trending" (dicari AI lewat
-  Google Search, tap buat impor dari TMDB), lalu baris horizontal
-  Coming Soon / Sedang Tayang / Tamat
-- List drama (Rencana/Nonton/Selesai/Drop) dengan **rating bintang**,
-  **progress episode** (slider + stepper), dan **catatan pribadi** —
-  mirip MyDramaList, tersimpan lokal di HP
-- **Ngobrol sama AI**: halaman chat penuh (bukan cuma satu kali
-  tanya), inget konteks percakapan, bisa Google Search buat info
-  terkini
-- **Tambah dari TMDB**: cari drakor lewat database TMDB (gratis) dan
-  impor langsung ke katalog — poster, sinopsis, cast, genre, jadwal
-  tayang otomatis terisi. Kalau TMDB belum punya sinopsis bahasa
-  Indonesia, otomatis diterjemahkan pakai AI (Gemini) saat diimpor
-- Search dasar (judul & genre) di tab Discover
+- **Home ala Netflix**: search bar buat cari drakor langsung dari TMDB,
+  baris "Lanjut Nonton" (dari yang kamu tracking), hero banner, baris
+  "Trending" (AI + Google Search), "Populer" dan "Top Rated" (langsung
+  dari TMDB, bukan data lokal) — tap drama mana pun buka halaman detail
+- **List-ku**: tempat drama yang kamu simpan (Rencana/Nonton/Selesai/
+  Drop) dengan **rating bintang**, **progress episode**, dan
+  **catatan pribadi** — mirip MyDramaList. Drama otomatis masuk ke
+  sini begitu kamu atur status & tekan "Simpan Perubahan" di halaman
+  detail, dari mana pun kamu buka drama itu (Home, Discover, atau
+  Tambah dari TMDB)
+- **Discover**: search di drama yang sudah kamu simpan, plus tombol
+  "+" buat impor cepat dari TMDB dan CTA ke chat AI
+- **Ngobrol sama AI**: halaman chat penuh, inget konteks percakapan,
+  bisa Google Search buat info terkini
+- Kalau TMDB belum punya sinopsis bahasa Indonesia, otomatis
+  diterjemahkan pakai AI (Gemini) saat drama dibuka/disimpan
 - UI minimalis ala Metrolist (Material 3), dengan logo HanVerse
   (motif taegeuk + aksen play) sebagai app icon
-- Data drama: gabungan dari data contoh bawaan (`mock_dramas.dart`)
 - Splash screen dengan animasi logo saat app dibuka
 - API key (AI & TMDB) divalidasi beneran ke server saat disimpan,
   bukan cuma disimpan mentah — ketauan dari awal kalau salah ketik
-  + drama yang kamu impor dari TMDB, semua tersimpan lokal di HP
+- Data drama: 100% dari TMDB (browse/search), gak ada data contoh/
+  dummy bawaan
+
+## Catatan soal kuota AI
+Tier gratis Gemini punya limit request per menit/hari. Kalau muncul
+pesan "kuota lagi habis", itu bukan bug — tunggu beberapa menit atau
+cek limit di ai.google.dev/gemini-api/docs/rate-limits.
 
 ## Cara pakai (development lokal)
 1. Install Flutter SDK: https://docs.flutter.dev/get-started/install
