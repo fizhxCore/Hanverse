@@ -14,7 +14,7 @@ class TmdbSearchScreen extends StatefulWidget {
 
 class _TmdbSearchScreenState extends State<TmdbSearchScreen> {
   final _controller = TextEditingController();
-  List<TmdbSearchResult> _results = [];
+  List<TmdbBrowseItem> _results = [];
   bool _loading = false;
   String? _error;
 
@@ -49,13 +49,13 @@ class _TmdbSearchScreenState extends State<TmdbSearchScreen> {
       final results = await TmdbService.search(apiKey, query);
       setState(() => _results = results);
     } catch (e) {
-      setState(() => _error = 'Gagal cari: $e');
+      setState(() => _error = e.toString().replaceFirst('Exception: ', ''));
     } finally {
       setState(() => _loading = false);
     }
   }
 
-  Future<void> _importDrama(TmdbSearchResult result) async {
+  Future<void> _importDrama(TmdbBrowseItem result) async {
     final tmdbKey = await TmdbService.getApiKey();
     if (tmdbKey == null || tmdbKey.isEmpty) return;
 
@@ -66,32 +66,12 @@ class _TmdbSearchScreenState extends State<TmdbSearchScreen> {
     );
 
     try {
-      final detail = await TmdbService.getDetail(tmdbKey, result.id);
-      var drama = detail.drama;
-
-      if (detail.butuhTerjemahanSinopsis) {
-        final aiKey = await AiService.getApiKey();
-        if (aiKey != null && aiKey.isNotEmpty) {
-          try {
-            final terjemahan = await AiService.translateToIndonesian(
-              apiKey: aiKey,
-              englishText: drama.sinopsis,
-            );
-            drama = drama.copyWith(sinopsis: terjemahan);
-          } catch (_) {
-            // Kalau gagal terjemahkan, tetap lanjut pakai sinopsis Inggris asli.
-            drama = drama.copyWith(
-              sinopsis: '(Belum ada terjemahan Indonesia)\n${drama.sinopsis}',
-            );
-          }
-        } else {
-          drama = drama.copyWith(
-            sinopsis: '(Belum ada terjemahan Indonesia — atur API key AI di '
-                'Pengaturan supaya bisa diterjemahkan otomatis)\n${drama.sinopsis}',
-          );
-        }
-      }
-
+      final aiKey = await AiService.getApiKey();
+      final drama = await TmdbService.getFullDrama(
+        tmdbApiKey: tmdbKey,
+        tmdbId: result.id,
+        aiApiKey: aiKey,
+      );
       await CatalogStore.add(drama);
       if (!mounted) return;
       Navigator.of(context).pop(); // tutup loading dialog
@@ -102,7 +82,7 @@ class _TmdbSearchScreenState extends State<TmdbSearchScreen> {
       if (!mounted) return;
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal impor: $e')),
+        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
       );
     }
   }
