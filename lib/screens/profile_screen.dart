@@ -106,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const Divider(height: 1),
                   ListTile(
                     leading: Icon(Icons.movie_outlined, color: scheme.primary),
-                    title: const Text('Jumlah drama di katalog'),
+                    title: const Text('Drama tersimpan'),
                     trailing: Text('$_jumlahKatalog'),
                   ),
                   const Divider(height: 1),
