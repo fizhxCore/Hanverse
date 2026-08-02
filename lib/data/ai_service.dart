@@ -14,9 +14,47 @@ class TrendingItem {
   TrendingItem({required this.judul, required this.alasan});
 }
 
+/// Ubah error mentah dari API jadi pesan yang gampang dimengerti manusia,
+/// bukan JSON teknis.
+String _friendlyAiError(int statusCode, String body) {
+  if (statusCode == 429) {
+    return 'Kuota gratis Gemini kamu lagi habis buat saat ini. '
+        'Coba lagi beberapa menit lagi (limit gratis biasanya reset per menit/hari).';
+  }
+  if (statusCode == 401 || statusCode == 403) {
+    return 'API key AI kamu kayaknya gak valid atau gak punya akses. '
+        'Cek lagi di Pengaturan.';
+  }
+  if (statusCode == 404) {
+    return 'Model AI yang dipakai gak ketemu/gak tersedia lagi. '
+        'Mungkin perlu update aplikasi ke versi terbaru.';
+  }
+  if (statusCode >= 500) {
+    return 'Server Gemini lagi bermasalah. Coba lagi sebentar lagi.';
+  }
+  return 'Gagal memanggil AI ($statusCode). Coba lagi.';
+}
+
 class AiService {
   static const _apiKeyPref = 'hanverse_ai_api_key';
   static const _model = 'gemini-3.6-flash';
+
+  static Exception _friendlyError(int statusCode) {
+    switch (statusCode) {
+      case 429:
+        return Exception(
+            'Lagi kena limit pemakaian gratis Gemini. Coba lagi beberapa menit lagi ya.');
+      case 404:
+        return Exception('Model AI belum didukung. Coba update aplikasi.');
+      case 403:
+      case 401:
+        return Exception('API key AI ditolak. Cek lagi di Pengaturan.');
+      case 400:
+        return Exception('Permintaan ke AI gak valid. Coba lagi.');
+      default:
+        return Exception('Gagal menghubungi AI (kode $statusCode). Coba lagi nanti.');
+    }
+  }
 
   static Future<String?> getApiKey() async {
     final prefs = await SharedPreferences.getInstance();
@@ -105,7 +143,7 @@ class AiService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Gagal memanggil AI (${response.statusCode}): ${response.body}');
+      throw Exception(_friendlyAiError(response.statusCode, response.body));
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -172,7 +210,7 @@ class AiService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Gagal memanggil AI (${response.statusCode}): ${response.body}');
+      throw Exception(_friendlyAiError(response.statusCode, response.body));
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -225,7 +263,7 @@ class AiService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Gagal ambil trending (${response.statusCode}): ${response.body}');
+      throw Exception(_friendlyAiError(response.statusCode, response.body));
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -290,7 +328,7 @@ class AiService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Gagal menerjemahkan (${response.statusCode}): ${response.body}');
+      throw Exception(_friendlyAiError(response.statusCode, response.body));
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
