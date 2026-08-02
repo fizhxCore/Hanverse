@@ -122,6 +122,19 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                if (_results.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Center(
+                      child: Text(
+                        _katalog.isEmpty
+                            ? 'Katalog masih kosong. Tap "+" buat nambah drama dari TMDB.'
+                            : 'Gak ketemu drama yang cocok.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: scheme.onSurfaceVariant),
+                      ),
+                    ),
+                  ),
                 ..._results.map((d) => Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: DramaCard(
