@@ -58,7 +58,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
       final reply = await AiService.chat(apiKey: apiKey, history: history, katalog: _katalog);
       setState(() => _messages.add(ChatMessage('model', reply)));
     } catch (e) {
-      setState(() => _error = 'Gagal minta balasan: $e');
+      setState(() => _error = e.toString().replaceFirst('Exception: ', ''));
     } finally {
       setState(() => _loading = false);
       _scrollToBottom();
